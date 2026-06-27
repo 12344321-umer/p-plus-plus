@@ -1,0 +1,10 @@
+sceneOnHa
+    numYesKarao score <- 8 !!
+    lowkey (score > 5)
+    basYar
+        spillTea "noCap passing" !!
+    warnaBro
+    basYar
+        spillTea "cap failing" !!
+    wapas 0 !!
+sceneOffHa

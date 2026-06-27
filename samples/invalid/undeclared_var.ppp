@@ -1,0 +1,4 @@
+sceneOnHa
+    x <- 10 !!
+    spillTea "this will fail" !!
+sceneOffHa
