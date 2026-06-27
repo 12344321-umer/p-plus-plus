@@ -24,3 +24,10 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# ── Exceptions — keep these generated files so anyone who clones
+#    the repo can run the compiler without installing Flex/Bison/GCC
+!compiler/lex.yy.c
+!compiler/parser.tab.c
+!compiler/parser.tab.h
+!compiler/p-plus-plus.exe

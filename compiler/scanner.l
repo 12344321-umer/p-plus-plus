@@ -38,10 +38,17 @@ STRING      \"([^\"\\\n]|\\.)*\"
 "noCap"         { return NOCAP;         }
 "cap"           { return CAP;           }
 "basYar"        { return BASYAR;        }
+"aurBhai"       { return AND;           }
+"yaBhai"        { return OR;            }
+"nahi"          { return NOT;           }
 
 "<-"            { return ASSIGN;     }
 "==?"           { return EQ;         }
 "^+"            { return PLUS;       }
+"^-"            { return MINUS;      }
+"^*"            { return MULTIPLY;   }
+"^/"            { return DIVIDE;     }
+"^%"            { return MODULO;     }
 "<="            { return LTE;        }
 ">="            { return GTE;        }
 "<"             { return LT;         }

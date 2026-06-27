@@ -1,4 +1,4 @@
- %{
+%{
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +32,8 @@ ASTNode *ast_root = NULL;
 %token WAPAS SPILLTEA
 %token NUMYESKARAO FLOATYESKARAO
 %token NOCAP CAP BASYAR
-%token ASSIGN EQ PLUS
+%token ASSIGN EQ PLUS MINUS MULTIPLY DIVIDE MODULO
+%token AND OR NOT
 %token LT GT LTE GTE
 %token TERMINATOR SEPARATOR
 %token LPAREN RPAREN
@@ -42,6 +43,16 @@ ASTNode *ast_root = NULL;
 %token <float_val> SCIENTIFIC_NUM
 %token <str_val>   STRING_LIT
 %token <str_val>   ID
+
+/* 
+   Operator precedence (lowest to highest)
+   This tells Bison which operators bind tighter
+ */
+%left OR
+%left AND
+%right NOT
+%left PLUS MINUS
+%left MULTIPLY DIVIDE MODULO
 
 /* 
    Rule return types
@@ -234,31 +245,40 @@ continue_stmt
 
 /* 
    Conditions
+   aurBhai = and   |   yaBhai = or   |   nahi = not
  */
 condition
-    : expr EQ  expr { $$ = make_condition("==?", $1, $3); }
-    | expr LT  expr { $$ = make_condition("<",   $1, $3); }
-    | expr GT  expr { $$ = make_condition(">",   $1, $3); }
-    | expr LTE expr { $$ = make_condition("<=",  $1, $3); }
-    | expr GTE expr { $$ = make_condition(">=",  $1, $3); }
+    : expr EQ  expr              { $$ = make_condition("==?",     $1, $3); }
+    | expr LT  expr              { $$ = make_condition("<",        $1, $3); }
+    | expr GT  expr              { $$ = make_condition(">",        $1, $3); }
+    | expr LTE expr              { $$ = make_condition("<=",       $1, $3); }
+    | expr GTE expr              { $$ = make_condition(">=",       $1, $3); }
+    | condition AND condition    { $$ = make_condition("aurBhai",  $1, $3); }
+    | condition OR  condition    { $$ = make_condition("yaBhai",   $1, $3); }
+    | NOT condition              { $$ = make_condition("nahi",     $2, NULL); }
     ;
 
 /* 
    Expressions
+   ^+ = add   ^- = subtract   ^* = multiply   ^/ = divide   ^% = modulo
  */
 expr
-    : expr PLUS term { $$ = make_binop("^+", $1, $3); }
-    | term           { $$ = $1; }
+    : expr PLUS     term { $$ = make_binop("^+", $1, $3); }
+    | expr MINUS    term { $$ = make_binop("^-", $1, $3); }
+    | expr MULTIPLY term { $$ = make_binop("^*", $1, $3); }
+    | expr DIVIDE   term { $$ = make_binop("^/", $1, $3); }
+    | expr MODULO   term { $$ = make_binop("^%", $1, $3); }
+    | term               { $$ = $1;                        }
     ;
 
 term
-    : INT_NUM        { $$ = make_int($1);        }
-    | FLOAT_NUM      { $$ = make_float($1);      }
-    | SCIENTIFIC_NUM { $$ = make_float($1);      }
-    | STRING_LIT     { $$ = make_string($1);     }
-    | NOCAP          { $$ = make_bool(1);         }
-    | CAP            { $$ = make_bool(0);         }
-    | ID             { $$ = make_ident($1);      }
+    : INT_NUM        { $$ = make_int($1);    }
+    | FLOAT_NUM      { $$ = make_float($1);  }
+    | SCIENTIFIC_NUM { $$ = make_float($1);  }
+    | STRING_LIT     { $$ = make_string($1); }
+    | NOCAP          { $$ = make_bool(1);    }
+    | CAP            { $$ = make_bool(0);    }
+    | ID             { $$ = make_ident($1);  }
     ;
 
 %%
