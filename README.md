@@ -201,7 +201,6 @@ p-plus-plus/
 │   └── Output.jsx           Terminal output, AST viewer, symbol table
 └── api/
 └── compilerApi.js       Talks to the backend
-
 ---
 
 ## How to Run It
