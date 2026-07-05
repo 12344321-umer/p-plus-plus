@@ -176,31 +176,34 @@ sceneOffHa
 ---
 
 ## Project Structure
+
+```
 p-plus-plus/
-├── compiler/                        The actual compiler written in C
-│   ├── scanner.l                    Flex lexer — tokenizes your code
-│   ├── parser.y                     Bison parser — builds the AST
-│   ├── ast.c / ast.h                AST node definitions and constructors
-│   ├── semantic.c / semantic.h      Semantic analysis and scoped symbol table
-│   ├── main.c                       Interpreter, JSON output, entry point
-│   └── p-plus-plus.exe              Pre-built Windows executable
-│
-├── server/                          Node.js + Express backend
-│   ├── index.js                     API server on port 3001
-│   └── compile.js                   Calls the compiler exe and returns JSON
-│
-└── web/                             React frontend
-└── src/
-├── App.jsx
-├── pages/
-│   ├── Playground.jsx       Live code editor and output
-│   └── Docs.jsx             Language reference and examples
-├── components/
-│   ├── Navbar.jsx           Navigation with Playground and Docs links
-│   ├── Editor.jsx           Code editor with sample programs
-│   └── Output.jsx           Terminal output, AST viewer, symbol table
-└── api/
-└── compilerApi.js       Talks to the backend
+├── compiler/
+│   ├── scanner.l
+│   ├── parser.y
+│   ├── ast.c
+│   ├── ast.h
+│   ├── semantic.c
+│   ├── semantic.h
+│   ├── main.c
+│   └── p-plus-plus.exe
+├── server/
+│   ├── index.js
+│   └── compile.js
+└── web/
+    └── src/
+        ├── App.jsx
+        ├── pages/
+        │   ├── Playground.jsx
+        │   └── Docs.jsx
+        ├── components/
+        │   ├── Navbar.jsx
+        │   ├── Editor.jsx
+        │   └── Output.jsx
+        └── api/
+            └── compilerApi.js
+```
 ---
 
 ## How to Run It
