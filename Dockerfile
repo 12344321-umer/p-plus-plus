@@ -1,11 +1,14 @@
 FROM ubuntu:22.04
 
-# Install Node.js and gcc
+# Install curl and gcc
 RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
+    curl \
     gcc \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
 
 # Set working directory
 WORKDIR /app
