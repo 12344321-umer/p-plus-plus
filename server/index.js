@@ -3,17 +3,17 @@ const cors = require("cors");
 const { compile } = require("./compile");
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
-// Health check
+/* Health check */
 app.get("/", (req, res) => {
   res.json({ status: "P++ compiler server running" });
 });
 
-// Main compile endpoint
+/* Main compile endpoint */
 app.post("/compile", async (req, res) => {
   const { code } = req.body;
 
