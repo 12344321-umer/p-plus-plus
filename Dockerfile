@@ -25,7 +25,7 @@ RUN cd compiler && \
 RUN cd server && npm install
 
 # Expose port
-EXPOSE 3001
+EXPOSE 8080
 
 # Start the server
 CMD ["node", "server/index.js"]
