@@ -1,0 +1,11 @@
+sceneOnHa
+    numYesKarao x <- 99 !!
+    lowkey (x ==? 1)
+    basYar
+        spillTea "one" !!
+    phirBro (x ==? 3)
+    basYar
+        spillTea "three" !!
+    yehLo
+    wapas 0 !!
+sceneOffHa

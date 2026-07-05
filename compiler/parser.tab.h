@@ -69,29 +69,33 @@ extern int yydebug;
     NOCAP = 270,                   /* NOCAP  */
     CAP = 271,                     /* CAP  */
     BASYAR = 272,                  /* BASYAR  */
-    ASSIGN = 273,                  /* ASSIGN  */
-    EQ = 274,                      /* EQ  */
-    PLUS = 275,                    /* PLUS  */
-    MINUS = 276,                   /* MINUS  */
-    MULTIPLY = 277,                /* MULTIPLY  */
-    DIVIDE = 278,                  /* DIVIDE  */
-    MODULO = 279,                  /* MODULO  */
-    AND = 280,                     /* AND  */
-    OR = 281,                      /* OR  */
-    NOT = 282,                     /* NOT  */
-    LT = 283,                      /* LT  */
-    GT = 284,                      /* GT  */
-    LTE = 285,                     /* LTE  */
-    GTE = 286,                     /* GTE  */
-    TERMINATOR = 287,              /* TERMINATOR  */
-    SEPARATOR = 288,               /* SEPARATOR  */
-    LPAREN = 289,                  /* LPAREN  */
-    RPAREN = 290,                  /* RPAREN  */
-    INT_NUM = 291,                 /* INT_NUM  */
-    FLOAT_NUM = 292,               /* FLOAT_NUM  */
-    SCIENTIFIC_NUM = 293,          /* SCIENTIFIC_NUM  */
-    STRING_LIT = 294,              /* STRING_LIT  */
-    ID = 295                       /* ID  */
+    KAAMKARO = 273,                /* KAAMKARO  */
+    YEHLO = 274,                   /* YEHLO  */
+    KITNALAMBA = 275,              /* KITNALAMBA  */
+    ASSIGN = 276,                  /* ASSIGN  */
+    EQ = 277,                      /* EQ  */
+    PLUS = 278,                    /* PLUS  */
+    MINUS = 279,                   /* MINUS  */
+    MULTIPLY = 280,                /* MULTIPLY  */
+    DIVIDE = 281,                  /* DIVIDE  */
+    MODULO = 282,                  /* MODULO  */
+    AND = 283,                     /* AND  */
+    OR = 284,                      /* OR  */
+    NOT = 285,                     /* NOT  */
+    LT = 286,                      /* LT  */
+    GT = 287,                      /* GT  */
+    LTE = 288,                     /* LTE  */
+    GTE = 289,                     /* GTE  */
+    TERMINATOR = 290,              /* TERMINATOR  */
+    SEPARATOR = 291,               /* SEPARATOR  */
+    COMMA = 292,                   /* COMMA  */
+    LPAREN = 293,                  /* LPAREN  */
+    RPAREN = 294,                  /* RPAREN  */
+    INT_NUM = 295,                 /* INT_NUM  */
+    FLOAT_NUM = 296,               /* FLOAT_NUM  */
+    SCIENTIFIC_NUM = 297,          /* SCIENTIFIC_NUM  */
+    STRING_LIT = 298,              /* STRING_LIT  */
+    ID = 299                       /* ID  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -107,7 +111,7 @@ union YYSTYPE
     char      *str_val;
     ASTNode   *node;
 
-#line 111 "parser.tab.h"
+#line 115 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

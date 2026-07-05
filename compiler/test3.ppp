@@ -1,10 +1,11 @@
 sceneOnHa
     numYesKarao counter <- 0 !!
-    numYesKarao limit <- 5 !!
+    numYesKarao limit <- 3 !!
     chalBro (counter < limit)
     basYar
         spillTea "looping..." !!
         counter <- counter ^+ 1 !!
     yehLo
+    spillTea "done!" !!
     wapas 0 !!
 sceneOffHa

@@ -31,11 +31,11 @@ ASTNode *ast_root = NULL;
 %token CHALBRO GHOSTED MISSKARA
 %token WAPAS SPILLTEA
 %token NUMYESKARAO FLOATYESKARAO
-%token NOCAP CAP BASYAR
+%token NOCAP CAP BASYAR KAAMKARO YEHLO KITNALAMBA
 %token ASSIGN EQ PLUS MINUS MULTIPLY DIVIDE MODULO
 %token AND OR NOT
 %token LT GT LTE GTE
-%token TERMINATOR SEPARATOR
+%token TERMINATOR SEPARATOR COMMA
 %token LPAREN RPAREN
 
 %token <int_val>   INT_NUM
@@ -46,7 +46,6 @@ ASTNode *ast_root = NULL;
 
 /* 
    Operator precedence (lowest to highest)
-   This tells Bison which operators bind tighter
  */
 %left OR
 %left AND
@@ -68,6 +67,10 @@ ASTNode *ast_root = NULL;
 %type <node> return_stmt
 %type <node> break_stmt
 %type <node> continue_stmt
+%type <node> func_decl
+%type <node> func_call
+%type <node> param_list
+%type <node> arg_list
 %type <node> condition
 %type <node> expr
 %type <node> term
@@ -119,6 +122,8 @@ stmt
     | return_stmt   { $$ = $1; }
     | break_stmt    { $$ = $1; }
     | continue_stmt { $$ = $1; }
+    | func_decl     { $$ = $1; }
+    | func_call     { $$ = $1; }
     ;
 
 /* 
@@ -156,19 +161,19 @@ assign_stmt
     ;
 
 /* 
-   lowkey (cond) basYar stmt_list
-   lowkey (cond) basYar stmt_list warnaBro basYar stmt_list
-   lowkey (cond) basYar stmt_list phirBro (cond) basYar stmt_list
+   lowkey (cond) basYar stmt_list yehLo
+   lowkey (cond) basYar stmt_list warnaBro basYar stmt_list yehLo
+   lowkey (cond) basYar stmt_list phirBro (cond) basYar stmt_list yehLo
  */
 cond_stmt
-    : LOWKEY LPAREN condition RPAREN BASYAR stmt_list
+    : LOWKEY LPAREN condition RPAREN BASYAR stmt_list YEHLO
         {
             ASTNode *n  = make_node(NODE_IF);
             n->left     = $3;
             n->right    = $6;
             $$ = n;
         }
-    | LOWKEY LPAREN condition RPAREN BASYAR stmt_list WARNABRO BASYAR stmt_list
+    | LOWKEY LPAREN condition RPAREN BASYAR stmt_list WARNABRO BASYAR stmt_list YEHLO
         {
             ASTNode *n  = make_node(NODE_IF_ELSE);
             n->left     = $3;
@@ -176,21 +181,22 @@ cond_stmt
             n->extra    = $9;
             $$ = n;
         }
-    | LOWKEY LPAREN condition RPAREN BASYAR stmt_list PHIRBRO LPAREN condition RPAREN BASYAR stmt_list
+    | LOWKEY LPAREN condition RPAREN BASYAR stmt_list PHIRBRO LPAREN condition RPAREN BASYAR stmt_list YEHLO
         {
             ASTNode *n  = make_node(NODE_IF_ELSEIF);
-            n->left     = $3;
-            n->right    = $6;
-            n->extra    = $12;
+            n->left     = $3;   /* first condition (lowkey) */
+            n->right    = $6;   /* first body (lowkey's body) */
+            n->cond2    = $9;   /* second condition (phirBro) */
+            n->extra    = $12;  /* second body (phirBro's body) */
             $$ = n;
         }
     ;
 
 /* 
-   chalBro (cond) basYar stmt_list
+   chalBro (cond) basYar stmt_list yehLo
  */
 loop_stmt
-    : CHALBRO LPAREN condition RPAREN BASYAR stmt_list
+    : CHALBRO LPAREN condition RPAREN BASYAR stmt_list YEHLO
         {
             ASTNode *n  = make_node(NODE_WHILE);
             n->left     = $3;
@@ -244,6 +250,68 @@ continue_stmt
     ;
 
 /* 
+   kaamKaro funcName ::: param1, param2 ::: basYar body yehLo
+   kaamKaro funcName ::: ::: basYar body yehLo   (no params)
+ */
+func_decl
+    : KAAMKARO ID SEPARATOR param_list SEPARATOR BASYAR stmt_list YEHLO
+        {
+            $$ = make_func_decl($2, $4, $7);
+        }
+    | KAAMKARO ID SEPARATOR SEPARATOR BASYAR stmt_list YEHLO
+        {
+            $$ = make_func_decl($2, NULL, $6);
+        }
+    ;
+
+/* 
+   funcName ::: arg1, arg2 ::: !!
+   funcName ::: ::: !!            (no args)
+ */
+func_call
+    : ID SEPARATOR arg_list SEPARATOR TERMINATOR
+        {
+            $$ = make_func_call($1, $3);
+        }
+    | ID SEPARATOR SEPARATOR TERMINATOR
+        {
+            $$ = make_func_call($1, NULL);
+        }
+    ;
+
+/*
+   param_list: params separated by commas
+*/
+param_list
+    : ID
+        {
+            $$ = make_param($1);
+        }
+    | param_list COMMA ID
+        {
+            ASTNode *p = make_param($3);
+            $1->next   = p;
+            $$ = $1;
+        }
+    ;
+
+/*
+   arg_list: args separated by commas
+*/
+arg_list
+    : expr
+        {
+            $$ = make_arg($1);
+        }
+    | arg_list COMMA expr
+        {
+            ASTNode *a = make_arg($3);
+            $1->next   = a;
+            $$ = $1;
+        }
+    ;
+
+/* 
    Conditions
    aurBhai = and   |   yaBhai = or   |   nahi = not
  */
@@ -271,6 +339,9 @@ expr
     | term               { $$ = $1;                        }
     ;
 
+/* 
+   Terms — includes gintiBata for string length
+ */
 term
     : INT_NUM        { $$ = make_int($1);    }
     | FLOAT_NUM      { $$ = make_float($1);  }
@@ -279,6 +350,12 @@ term
     | NOCAP          { $$ = make_bool(1);    }
     | CAP            { $$ = make_bool(0);    }
     | ID             { $$ = make_ident($1);  }
+    | KITNALAMBA ID
+        {
+            ASTNode *n = make_node(NODE_STR_LEN);
+            n->str_val = strdup($2);
+            $$ = n;
+        }
     ;
 
 %%

@@ -24,6 +24,11 @@ typedef enum {
     NODE_STRING_LIT,     // "hello"
     NODE_BOOL_LIT,       // noCap / cap
     NODE_IDENTIFIER,     // variable name
+    NODE_FUNC_DECL,      // kaamKaro funcName ::: params ::: basYar body yehLo
+    NODE_FUNC_CALL,      // funcName ::: args ::: !!
+    NODE_PARAM_LIST,     // linked list of parameter names
+    NODE_ARG_LIST,       // linked list of argument expressions
+    NODE_STR_LEN,        // gintiBata varName
 } NodeType;
 
 
@@ -39,10 +44,11 @@ typedef struct ASTNode {
     char   *str_val;     // string literals AND identifier names AND operators
 
     /* Children */
-    struct ASTNode *left;    // left child  (condition, expr, etc.)
-    struct ASTNode *right;   // right child
+    struct ASTNode *left;    // left child  (condition, expr, params, etc.)
+    struct ASTNode *right;   // right child (body, args, etc.)
     struct ASTNode *extra;   // third child (for if-elseif / if-else chains)
-    struct ASTNode *next;    // next sibling in a statement list
+    struct ASTNode *cond2;   // second condition (phirBro's own condition, for if-elseif)
+    struct ASTNode *next;    // next sibling in a list
 
 } ASTNode;
 
@@ -54,15 +60,19 @@ ASTNode *make_node      (NodeType type);
 ASTNode *make_int       (int val);
 ASTNode *make_float     (double val);
 ASTNode *make_string    (const char *val);
-ASTNode *make_bool      (int val);          // 1 = noCap, 0 = cap
+ASTNode *make_bool      (int val);
 ASTNode *make_ident     (const char *name);
 ASTNode *make_binop     (const char *op, ASTNode *left, ASTNode *right);
 ASTNode *make_condition (const char *op, ASTNode *left, ASTNode *right);
+ASTNode *make_func_decl (const char *name, ASTNode *params, ASTNode *body);
+ASTNode *make_func_call (const char *name, ASTNode *args);
+ASTNode *make_param     (const char *name);
+ASTNode *make_arg       (ASTNode *expr);
 
 /* 
    Utility  (defined in ast.c)
  */
-void print_ast  (ASTNode *node, int depth);   // pretty-print the tree
-void free_ast   (ASTNode *node);              // free all memory
+void print_ast  (ASTNode *node, int depth);
+void free_ast   (ASTNode *node);
 
-#endif 
+#endif

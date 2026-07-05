@@ -38,6 +38,9 @@ STRING      \"([^\"\\\n]|\\.)*\"
 "noCap"         { return NOCAP;         }
 "cap"           { return CAP;           }
 "basYar"        { return BASYAR;        }
+"kaamKaro"      { return KAAMKARO;      }
+"yehLo"         { return YEHLO;         }
+"gintiBata"     { return KITNALAMBA;    }
 "aurBhai"       { return AND;           }
 "yaBhai"        { return OR;            }
 "nahi"          { return NOT;           }
@@ -58,6 +61,7 @@ STRING      \"([^\"\\\n]|\\.)*\"
 ":::"           { return SEPARATOR;  }
 "("             { return LPAREN;     }
 ")"             { return RPAREN;     }
+","             { return COMMA;      }
 
 {SCIENTIFIC}    {
                     yylval.float_val = atof(yytext);

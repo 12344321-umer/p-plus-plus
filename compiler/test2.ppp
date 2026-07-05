@@ -1,0 +1,11 @@
+sceneOnHa
+    numYesKarao a <- 10 !!
+    numYesKarao b <- 3 !!
+    numYesKarao sum  <- a ^+ b !!
+    numYesKarao diff <- a ^- b !!
+    numYesKarao prod <- a ^* b !!
+    numYesKarao quot <- a ^/ b !!
+    numYesKarao rem  <- a ^% b !!
+    spillTea sum !!
+    wapas 0 !!
+sceneOffHa

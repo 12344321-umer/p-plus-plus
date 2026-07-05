@@ -1,5 +1,31 @@
 sceneOnHa
-    numYesKarao x <- 5 !!
-    spillTea "hello world" !!
+    kaamKaro add ::: a, b :::
+    basYar
+        numYesKarao result <- a ^+ b !!
+        spillTea result !!
+        wapas result !!
+    yehLo
+
+    kaamKaro greet ::: name :::
+    basYar
+        spillTea name !!
+        wapas 0 !!
+    yehLo
+
+    kaamKaro countdown ::: n :::
+    basYar
+        chalBro (n > 0)
+        basYar
+            spillTea n !!
+            n <- n ^- 1 !!
+        yehLo
+        spillTea "done!" !!
+        wapas 0 !!
+    yehLo
+
+    greet ::: "Salam Umer!" ::: !!
+    add ::: 10, 5 ::: !!
+    add ::: 100, 200 ::: !!
+    countdown ::: 3 ::: !!
     wapas 0 !!
 sceneOffHa
