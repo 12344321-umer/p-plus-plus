@@ -1,3 +1,23 @@
+function TerminalOutput({ lines }) {
+  if (!lines || lines.length === 0) {
+    return (
+      <p className="empty-msg">
+        No output — add a spillTea statement to print something.
+      </p>
+    );
+  }
+  return (
+    <div className="terminal">
+      {lines.map((line, i) => (
+        <div key={i} className="terminal-line">
+          <span className="terminal-prompt">{">"}</span>
+          <span className="terminal-text">{line}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ASTNode({ node, depth = 0 }) {
   if (!node) return null;
 
@@ -108,10 +128,11 @@ export default function Output({ result }) {
     );
   }
 
-  const { parseOk, semErrors, ast, symbols } = result.data;
+  const { parseOk, semErrors, output, ast, symbols } = result.data;
 
   return (
     <div className="output-panel">
+      {/* ── Status bar ── */}
       <div className="status-bar">
         <span className={parseOk ? "status-ok" : "status-fail"}>
           {parseOk ? "✓ Parse OK" : "✗ Parse Failed"}
@@ -121,8 +142,20 @@ export default function Output({ result }) {
             ? "✓ Semantic OK"
             : `✗ ${semErrors} Semantic Error(s)`}
         </span>
+        {output && output.length > 0 && (
+          <span className="status-ok">
+            ✓ {output.length} line{output.length !== 1 ? "s" : ""} of output
+          </span>
+        )}
       </div>
 
+      {/* ── Terminal output ── */}
+      <div className="output-section output-section--terminal">
+        <h3>Output</h3>
+        <TerminalOutput lines={output} />
+      </div>
+
+      {/* ── AST ── */}
       <div className="output-section">
         <h3>Abstract Syntax Tree</h3>
         <div className="ast-container">
@@ -130,6 +163,7 @@ export default function Output({ result }) {
         </div>
       </div>
 
+      {/* ── Symbol table ── */}
       <div className="output-section">
         <h3>Symbol Table</h3>
         <SymbolTable symbols={symbols} />
